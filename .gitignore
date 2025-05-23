@@ -1,2 +1,4 @@
+gymapp/
+__pycache__/
+*.pyc
 .env 
-gymapp
