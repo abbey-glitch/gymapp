@@ -6,16 +6,19 @@ from passlib.hash import sha256_crypt
 # from flask_script._compat import Manager
 from functools import wraps
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'password'
-app.config['MYSQL_DB'] = 'Gym'
-app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+app.config['MYSQL_HOST'] = os.getenv("MYSQL_HOST")
+app.config['MYSQL_USER'] = os.getenv("MYSQL_USER")
+app.config['MYSQL_PASSWORD'] = os.getenv("MYSQL_PASSWORD")
+app.config['MYSQL_DB'] = os.getenv("Gym")
+app.config['MYSQL_CURSORCLASS'] = os.getenv("MYSQL_CURSORCLASS")
 
 mysql = MySQL(app)
+
+
 
 def is_logged_in(f):
 	@wraps(f)
@@ -71,7 +74,7 @@ def login():
 		cur = mysql.connection.cursor()
 
 		result = cur.execute('SELECT * FROM info WHERE username = %s', [username])
-		#print(result)
+		print(result)
 		if result>0:
 			data = cur.fetchone()
 			password = data['password']
@@ -80,7 +83,7 @@ def login():
 				session['logged_in'] = True
 				session['username'] = username
 				session['prof'] = data['prof']
-				#session['hash'] = sha256_crypt.encrypt(username)
+				session['hash'] = sha256_crypt.encrypt(username)
 				flash('You are logged in', 'success')
 				if session['prof'] == 1:
 					return redirect(url_for('adminDash'))
@@ -92,9 +95,8 @@ def login():
 				return redirect(url_for('memberDash', username = username))
 			else:
 				error = 'Invalid login'
-				return render_template('login.html', error = error)
-
-			cur.close();
+				cur.close()
+				return render_template('login.html', error = error)	
 		else:
 			error = 'Username NOT FOUND'
 			return render_template('login.html', error = error)
@@ -654,7 +656,7 @@ def edit_profile(username):
 	cur.close()
 
 	if request.method == 'POST' and form.validate():
-		#app.logger.info("setzdgxfhcgjvkhbjlkn")
+		# app.logger.info("setzdgxfhcgjvkhbjlkn")
 		name = request.form['name']
 		street = request.form['street']
 		city = request.form['city']
@@ -687,10 +689,10 @@ def logout():
 	flash('You are now logged out', 'success')
 	return redirect(url_for('login'))
 
-if __name__ == "__main__":
-	app.secret_key = '528491@JOKER'
-	app.debug = True
-	# manager = Manager(app)
-	#manager.secret_key = '528491@siva'
-	# manager.run()
-	app.run()
+# if __name__ == "__main__":
+# 	app.secret_key = os.getenv('SECRET_KEY')
+# 	app.debug = True
+# 	# manager = Manager(app)
+# 	#manager.secret_key = '528491@siva'
+# 	# manager.run()
+# 	app.run()
