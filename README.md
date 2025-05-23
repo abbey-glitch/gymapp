@@ -12,3 +12,5 @@ The GYM MANAGEMENT SYSTEM is to automate everything that happens in the gym. It 
 * **Gym members** - Gym members can login into the system to view their daily goals like their workouts, goals, diet plan, etc. They enter their daily training details. They can edit their personal information like contact details, personal info etc. They can also view their trainers contact info. They can track their progress.
 * **Trainers** - Trainer can design and add a workout plan, view all the details, progress of all those who train under him/her, evaluate their workouts every day; edit their own contact details and personal info; can view all the equipment details available in the gym.
  * **Receptionist** - Receptionist can view contact details of everyone, add a member, delete a member.
+
+visit: https://gymapp-0s86.onrender.com/
